@@ -1,16 +1,33 @@
 var stompClient = null;
-var players = [];
-var hand = null;
 
-var joinedMatch = false;
+// Infra
 
-// Connection
+$(function () {
+    connect();
+
+    $("form").on('submit', function (e) {
+        e.preventDefault();
+    });
+
+    $("#create-match").click(function () {
+        createMatch();
+    });
+    $("#join-match").click(function () {
+        var joinRequest = {
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val()
+        };
+        joinMatch(joinRequest);
+    });
+    $("#start-match").click(function () {
+        startMatch();
+    });
+});
 
 function connect() {
     var socket = new SockJS('/donkey-websocket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        setConnected(true);
         console.log('Connected: ' + frame);
 
         console.log('subscribe to [/topic/alerts]');
@@ -21,31 +38,15 @@ function connect() {
     });
 }
 
-function disconnect() {
-    if (stompClient != null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
-}
-
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
-
 function sendAlert(success, response) {
     alert(response);
 }
 
 // Game
+
+var players = [];
+var hand = null;
+var joinedMatch = false;
 
 function createMatch() {
     stompClient.send("/app/create-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
@@ -55,7 +56,9 @@ function joinMatch(request) {
     stompClient.send("/app/join-match", {}, JSON.stringify(request));
 
     if (!joinedMatch) {
-        stompClient.subscribe('/topic/match/' + request.matchName,
+        var matchDestination = '/topic/match/' + request.matchName;
+        console.log("subscribe to [\" + matchDestination + \"]");
+        stompClient.subscribe(matchDestination,
             function (joinResponse) {
                 players.push(
                     {
@@ -67,7 +70,9 @@ function joinMatch(request) {
             });
 
 
-        stompClient.subscribe('/topic/match/' + request.matchName + '/player/' + request.playerName,
+        var playerDestination = matchDestination + '/player/' + request.playerName;
+        console.log("subscribe to [\" + playerDestination + \"]");
+        stompClient.subscribe(playerDestination,
             function (handResponse) {
                 hand = JSON.parse(handResponse.body).hand;
                 renderHand(hand);
@@ -106,32 +111,3 @@ function renderHand(hand) {
 function startMatch() {
     stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
 }
-
-// Listeners
-
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-
-    $("#connect").click(function () {
-        connect();
-    });
-    $("#disconnect").click(function () {
-        disconnect();
-    });
-
-    $("#create-match").click(function () {
-        createMatch();
-    });
-    $("#join-match").click(function () {
-        var joinRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val()
-        };
-        joinMatch(joinRequest);
-    });
-    $("#start-match").click(function () {
-        startMatch();
-    });
-});
