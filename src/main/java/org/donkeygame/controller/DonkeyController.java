@@ -7,7 +7,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -29,27 +28,23 @@ public class DonkeyController {
     }
 
     @MessageMapping("/join-match")
-    @SendTo("/topic/joined")
-    public CompletableFuture<Object> joinGameOfDonkey(JoinGameOfDonkeyRequest msg) {
-        return commandGateway.send(new JoinGameOfDonkeyCommand(msg.getAggregateId(), msg.getUserName()));
+    public void joinGameOfDonkey(JoinGameOfDonkeyRequest msg) {
+        commandGateway.send(new JoinGameOfDonkeyCommand(msg.getMatchName(), msg.getUserName()));
     }
 
     @MessageMapping("/start-match")
-    @SendTo("/topic/start-match")
-    public CompletableFuture<Object> startGameOfDonkey(StartGameOfDonkeyRequest msg) {
-        return commandGateway.send(new StartGameOfDonkeyCommand(msg.getAggregateId()));
+    public void startGameOfDonkey(StartGameOfDonkeyRequest msg) {
+        commandGateway.send(new StartGameOfDonkeyCommand(msg.getMatchName()));
     }
 
     @MessageMapping("/play-card")
-    @SendTo("/topic/play-card")
-    public CompletableFuture<Object> playCard(PlayCardRequest msg) {
-        return commandGateway.send(new PlayCardCommand(msg.getAggregateId(), msg.getUserName(), msg.getCardNumber()));
+    public void playCard(PlayCardRequest msg) {
+        commandGateway.send(new PlayCardCommand(msg.getMatchName(), msg.getUserName(), msg.getCardNumber()));
     }
 
     @MessageMapping("/call-finished")
-    @SendTo("/topic/call-finished")
-    public CompletableFuture<Object> callGameFinished(CallGameFinishedRequest msg) {
-        return commandGateway.send(new CallGameFinishedCommand(msg.getAggregateId(), msg.getUserName()));
+    public void callGameFinished(CallGameFinishedRequest msg) {
+        commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getUserName()));
     }
 
 }
