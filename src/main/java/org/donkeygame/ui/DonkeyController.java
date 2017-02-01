@@ -45,15 +45,14 @@ public class DonkeyController {
     }
 
     @MessageMapping("/play-card")
-    public void playCard(PlayCardRequest msg) {
-        commandGateway.send(new PlayCardCommand(msg.getMatchName(), msg.getPlayerName(), msg.getCardNumber()));
+    public void playCard(SelectCardRequest msg) {
+        commandGateway.send(new SelectCardCommand(msg.getMatchName(), msg.getPlayerName(), msg.getCardIndex()));
     }
 
     @MessageMapping("/call-finished")
     public void callGameFinished(CallGameFinishedRequest msg) {
         commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getPlayerName()));
     }
-
 
 
     @EventHandler
@@ -80,7 +79,9 @@ public class DonkeyController {
 
     @EventHandler
     public void on(CardsPlayedEvent event) {
-        event.getPlays().forEach((p, c) -> messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), p), new CardPlayMessage(c)));
+        event.getPlays().forEach((player, card) -> messagingTemplate.convertAndSend(
+                buildDestination(event.getMatchName(), player), new CardPlayResponse(card)
+        ));
     }
 
     private String buildDestination(String matchName, String playerName) {

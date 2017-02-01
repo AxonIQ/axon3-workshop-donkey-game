@@ -26,6 +26,7 @@ public class Donkey {
     private String matchName;
     private Set<String> players = new HashSet<>();
     private Map<String, List<Card>> cardsPerPlayer = new HashMap<>();
+    private Map<String, Card> playedCards = new HashMap<>();
 
     public Donkey() {
         // Default constructor
@@ -48,11 +49,13 @@ public class Donkey {
                     "matchName[" + matchName + "] - " +
                             "At least " + MINIMUM_NUMBER_PLAYERS + " player needs to participate in a game of Donkey"
             );
+            return;
         } else if (players.size() > MAXIMUM_NUMBER_PLAYERS) {
             logger.info(
                     "matchName[" + matchName + "] - " +
                             "At most " + MAXIMUM_NUMBER_PLAYERS + " player can participate in a game of Donkey"
             );
+            return;
         }
 
         apply(new GameOfDonkeyStartedEvent(matchName));
@@ -72,14 +75,20 @@ public class Donkey {
 
         return players.stream().collect(Collectors.toMap(
                 Function.identity(),
-                p -> Arrays.asList(cardIterator.next(), cardIterator.next(), cardIterator.next(), cardIterator.next())
+                player -> Arrays.asList(cardIterator.next(), cardIterator.next(), cardIterator.next(), cardIterator.next())
         ));
     }
 
     @CommandHandler
-    public void handle(PlayCardCommand cmd) {
-        logger.info("reached PlayCardCommand");
-        //TODO playing logic
+    public void handle(SelectCardCommand cmd) {
+        String playerName = cmd.getPlayerName();
+        if (playedCards.containsKey(playerName)) {
+            logger.info("matchName[" + matchName + "] - Player [" + playerName + "] has already selected a card");
+            return;
+        }
+
+        Card selectedCard = cardsPerPlayer.get(playerName).get(cmd.getCardIndex());
+        apply(new CardSelectedEvent(cmd.getMatchName(), playerName, selectedCard));
     }
 
     @CommandHandler
@@ -105,7 +114,25 @@ public class Donkey {
 
     @EventSourcingHandler
     public void on(CardSelectedEvent event) {
-        //TODO Store card setup in aggregate
+        updateCardsPerPlayer(event.getPlayerName(), event.getSelectedCard());
+        updatePlayedCards(event.getPlayerName(), event.getSelectedCard());
+
+        if (everybodySelectedACard()) {
+            players.forEach(playerName -> apply(new CardsPlayedEvent(matchName, playerName, playedCards)));
+            playedCards.clear();
+        }
+    }
+
+    private void updateCardsPerPlayer(String playerName, Card selectedCard) {
+        cardsPerPlayer.get(playerName).remove(selectedCard);
+    }
+
+    private void updatePlayedCards(String playerName, Card selectedCard) {
+        playedCards.put(playerName, selectedCard);
+    }
+
+    private boolean everybodySelectedACard() {
+        return playedCards.size() == players.size();
     }
 
 }

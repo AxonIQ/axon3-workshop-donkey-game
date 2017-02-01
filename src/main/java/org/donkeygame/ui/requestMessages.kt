@@ -11,10 +11,10 @@ data class JoinGameOfDonkeyRequest(
 
 data class StartGameOfDonkeyRequest(@JsonProperty("matchName") val matchName: String)
 
-data class PlayCardRequest(
+data class SelectCardRequest(
         @JsonProperty("matchName") val matchName: String,
         @JsonProperty("playerName") val playerName: String,
-        @JsonProperty("cardNumber") val cardNumber: Int
+        @JsonProperty("cardIndex") val cardIndex: Int
 )
 
 data class CallGameFinishedRequest(

@@ -11,10 +11,10 @@ data class JoinGameOfDonkeyCommand(
         val playerName: String
 )
 
-data class PlayCardCommand(
+data class SelectCardCommand(
         @TargetAggregateIdentifier val matchName: String,
         val playerName: String,
-        val cardNumber: Int
+        val cardIndex: Int
 )
 
 data class CallGameFinishedCommand(

@@ -18,13 +18,13 @@ data class CardsDealtForPlayerEvent(
 data class CardSelectedEvent(
         val matchName: String,
         val playerName: String,
-        val card: String
+        val selectedCard: Card
 )
 
 data class CardsPlayedEvent(
         val matchName: String,
         val playerName: String,
-        val plays : Map<String, String>
+        val plays : Map<String, Card>
 )
 
 data class FinishedCalledEvent(val matchName: String)
