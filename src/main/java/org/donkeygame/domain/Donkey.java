@@ -23,6 +23,10 @@ public class Donkey {
     private String matchName;
     private Set<String> players = new HashSet<>();
 
+    public Donkey() {
+        // Default constructor
+    }
+
     @CommandHandler
     public Donkey(CreateGameOfDonkeyCommand cmd) {
         apply(new GameOfDonkeyCreatedEvent(cmd.getMatchName()));
