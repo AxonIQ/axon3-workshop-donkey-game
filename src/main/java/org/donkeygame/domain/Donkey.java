@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
@@ -18,10 +20,12 @@ public class Donkey {
     private static final Logger logger = LoggerFactory.getLogger(Donkey.class);
 
     private static final int MINIMUM_NUMBER_PLAYERS = 1;
+    private static final int MAXIMUM_NUMBER_PLAYERS = 13;
 
     @AggregateIdentifier
     private String matchName;
     private Set<String> players = new HashSet<>();
+    private Map<String, List<Card>> cardsPerPlayer = new HashMap<>();
 
     public Donkey() {
         // Default constructor
@@ -42,11 +46,34 @@ public class Donkey {
         if (players.size() < MINIMUM_NUMBER_PLAYERS) {
             logger.info(
                     "matchName[" + matchName + "] - " +
-                    "At least " + MINIMUM_NUMBER_PLAYERS + " player needs to participate in a game of Donkey"
+                            "At least " + MINIMUM_NUMBER_PLAYERS + " player needs to participate in a game of Donkey"
+            );
+        } else if (players.size() > MAXIMUM_NUMBER_PLAYERS) {
+            logger.info(
+                    "matchName[" + matchName + "] - " +
+                            "At most " + MAXIMUM_NUMBER_PLAYERS + " player can participate in a game of Donkey"
             );
         }
 
         apply(new GameOfDonkeyStartedEvent(matchName));
+
+        dealCards().forEach((player, cards) -> apply(new CardsDealtForPlayerEvent(matchName, player, cards)));
+    }
+
+    private Map<String, List<Card>> dealCards() {
+        List<Card> cards = Arrays.stream(Rank.values())
+                .limit(players.size())
+                .flatMap(r -> Arrays.stream(Suit.values()).map(s -> new Card(s, r)))
+                .collect(Collectors.toList());
+
+        Collections.shuffle(cards);
+
+        ListIterator<Card> cardIterator = cards.listIterator();
+
+        return players.stream().collect(Collectors.toMap(
+                Function.identity(),
+                p -> Arrays.asList(cardIterator.next(), cardIterator.next(), cardIterator.next(), cardIterator.next())
+        ));
     }
 
     @CommandHandler
@@ -72,25 +99,12 @@ public class Donkey {
     }
 
     @EventSourcingHandler
-    public void on(GameOfDonkeyStartedEvent event) {
-        //TODO replace for actual dealing action
-        List<String> cards = Collections.emptyList();
-
-        players.forEach(player -> apply(new CardsDealtForPlayerEvent(matchName, player, cards)));
-    }
-
-    @EventSourcingHandler
     public void on(CardsDealtForPlayerEvent event) {
-        updateCardSetup();
+        cardsPerPlayer.put(event.getUserName(), event.getCards());
     }
 
     @EventSourcingHandler
     public void on(CardSelectedEvent event) {
-
-        updateCardSetup();
-    }
-
-    private void updateCardSetup() {
         //TODO Store card setup in aggregate
     }
 
