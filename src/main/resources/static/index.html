@@ -5,6 +5,7 @@
     <title>Donkey Axon Demo</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/main.css" rel="stylesheet">
+    <link href="/cards.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -55,7 +56,8 @@
                 - 2: Press '2' to select you first card to play
                 - 3: Press '3' to select you first card to play
                 - 4: Press '4' to select you first card to play
-                - Space: When the light flickers, you have four identical card or somebody else has finished. Hit space quickly!
+                - Space: When the light flickers, you have four identical card or somebody else has finished. Hit space
+                quickly!
             </div>
         </div>
 
@@ -89,6 +91,15 @@
             </form>
         </div>
 
+    </div>
+
+</div>
+<div id="hand" class="container">
+    <div class="row">
+        <h3>Hand</h3>
+        <div class="playingCards">
+            <ul id="cards" class="table"></ul>
+        </div>
     </div>
 </div>
 </body>

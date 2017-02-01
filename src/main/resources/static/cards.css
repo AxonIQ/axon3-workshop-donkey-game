@@ -58,13 +58,13 @@
 /* suit colours
 ********************************************************************/
 
-.playingCards .card.diams {
+.playingCards .card.diamond {
     color: #f00 !important;
 }
-.playingCards.fourColours .card.diams {
+.playingCards.fourColours .card.diamond {
     color: #00f !important;
 }
-[lang=de] .playingCards.fourColours .card.diams {
+[lang=de] .playingCards.fourColours .card.diamond {
     color: #f60 !important;
 }
 .playingCards .card.hearts {
@@ -198,31 +198,31 @@
 /*____________ symbols in the middle (suits, full) ____________*/
 
 /* diamonds */
-.playingCards .card.rank-2.diams .suit:after {
+.playingCards .card.rank-2.diamond .suit:after {
     content: "\2666 \A\A\2666";
 }
-.playingCards .card.rank-3.diams .suit:after {
+.playingCards .card.rank-3.diamond .suit:after {
     content: "\2666 \A\2666 \A\2666";
 }
-.playingCards .card.rank-4.diams .suit:after {
+.playingCards .card.rank-4.diamond .suit:after {
     content: "\2666\00A0\00A0\00A0\2666 \A\A\2666\00A0\00A0\00A0\2666";
 }
-.playingCards .card.rank-5.diams .suit:after {
+.playingCards .card.rank-5.diamond .suit:after {
     content: "\2666\00A0\00A0\00A0\2666 \A\2666 \A\2666\00A0\00A0\00A0\2666";
 }
-.playingCards .card.rank-6.diams .suit:after {
+.playingCards .card.rank-6.diamond .suit:after {
     content: "\2666\00A0\00A0\00A0\2666 \A\2666\00A0\00A0\00A0\2666 \A\2666\00A0\00A0\00A0\2666";
 }
-.playingCards .card.rank-7.diams .suit:after {
+.playingCards .card.rank-7.diamond .suit:after {
     content: "\2666\00A0\00A0\2666 \A\2666\00A0\2666\00A0\2666 \A\2666\00A0\00A0\2666";
 }
-.playingCards .card.rank-8.diams .suit:after {
+.playingCards .card.rank-8.diamond .suit:after {
     content: "\2666\00A0\2666\00A0\2666 \A\2666\00A0\00A0\2666 \A\2666\00A0\2666\00A0\2666";
 }
-.playingCards .card.rank-9.diams .suit:after {
+.playingCards .card.rank-9.diamond .suit:after {
     content: "\2666\00A0\2666\00A0\2666 \A\2666\00A0\2666\00A0\2666 \A\2666\00A0\2666\00A0\2666";
 }
-.playingCards .card.rank-10.diams .suit:after {
+.playingCards .card.rank-10.diamond .suit:after {
     content: "\2666\00A0\2666\00A0\2666 \A\2666\00A0\2666\00A0\2666\00A0\2666 \A\2666\00A0\2666\00A0\2666";
 }
 
@@ -339,17 +339,17 @@
     */
 }
 
-.playingCards.faceImages .card.rank-j.diams  { background-image: url(faces/JD.gif); }
+.playingCards.faceImages .card.rank-j.diamond  { background-image: url(faces/JD.gif); }
 .playingCards.faceImages .card.rank-j.hearts { background-image: url(faces/JH.gif); }
 .playingCards.faceImages .card.rank-j.spades { background-image: url(faces/JS.gif); }
 .playingCards.faceImages .card.rank-j.clubs  { background-image: url(faces/JC.gif); }
 
-.playingCards.faceImages .card.rank-q.diams  { background-image: url(faces/QD.gif); }
+.playingCards.faceImages .card.rank-q.diamond  { background-image: url(faces/QD.gif); }
 .playingCards.faceImages .card.rank-q.hearts { background-image: url(faces/QH.gif); }
 .playingCards.faceImages .card.rank-q.spades { background-image: url(faces/QS.gif); }
 .playingCards.faceImages .card.rank-q.clubs  { background-image: url(faces/QC.gif); }
 
-.playingCards.faceImages .card.rank-k.diams  { background-image: url(faces/KD.gif); }
+.playingCards.faceImages .card.rank-k.diamond  { background-image: url(faces/KD.gif); }
 .playingCards.faceImages .card.rank-k.hearts { background-image: url(faces/KH.gif); }
 .playingCards.faceImages .card.rank-k.spades { background-image: url(faces/KS.gif); }
 .playingCards.faceImages .card.rank-k.clubs  { background-image: url(faces/KC.gif); }
@@ -404,8 +404,8 @@
     line-height: .9;
     bottom: .35em;
 }
-.playingCards.simpleCards .card.diams .suit:after,
-.playingCards .card.rank-a.diams .suit:after {
+.playingCards.simpleCards .card.diamond .suit:after,
+.playingCards .card.rank-a.diamond .suit:after {
     content: "\2666";
     right: .4em;
 }

@@ -1,4 +1,5 @@
 var stompClient = null;
+var hand = null;
 
 // Connection
 
@@ -10,9 +11,9 @@ function connect() {
         console.log('Connected: ' + frame);
 
         console.log('subscribe to [/topic/alerts]');
-        stompClient.subscribe('/topic/alerts', function (alert) {
-            var alertBody = JSON.parse(alert.body);
-            sendAlert(alertBody.success, alertBody.response);
+        stompClient.subscribe('/topic/alerts', function (alertResponse) {
+            var alert = JSON.parse(alertResponse.body);
+            sendAlert(alert.success, alert.response);
         });
     });
 }
@@ -47,17 +48,27 @@ function createMatch() {
     stompClient.send("/app/create-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
 }
 
-function joinMatch(joinRequest) {
-    stompClient.send("/app/join-match", {}, JSON.stringify(joinRequest));
+function joinMatch(request) {
+    stompClient.send("/app/join-match", {}, JSON.stringify(request));
 
-    stompClient.subscribe('/topic/match/' + joinRequest.matchName,
-        function (response) {
-            updateMatch(JSON.parse(match.body));
+    stompClient.subscribe('/topic/match/' + request.matchName + '/user/' + request.userName,
+        function (handResponse) {
+            hand = JSON.parse(handResponse.body).hand;
+            renderHand(hand);
         });
-    stompClient.subscribe('/topic/match/' + joinRequest.matchName + '/user/' + joinRequest.userName,
-        function (response) {
-            updateCards(JSON.parse(match.body));
-        });
+}
+
+function renderHand(hand) {
+    $.each(hand, function (key, card) {
+        var rank =  card.rank.letter;
+        var suit = card.suit.toLowerCase();
+        $("#cards").append(
+            "<li class=\"card rank-" + rank + " " + suit + "\">" +
+            "<span class=\"rank\">" + rank + "</span>" +
+            "<span class=\"suit\">&" + suit + ";</span>" +
+            "</li>"
+        );
+    });
 
 }
 
