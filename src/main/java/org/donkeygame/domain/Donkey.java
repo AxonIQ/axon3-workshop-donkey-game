@@ -20,30 +20,29 @@ public class Donkey {
     private static final int MINIMUM_NUMBER_PLAYERS = 1;
 
     @AggregateIdentifier
-    private String aggregateId;
     private String matchName;
     private Set<String> players = new HashSet<>();
 
     @CommandHandler
     public Donkey(CreateGameOfDonkeyCommand cmd) {
-        apply(new GameOfDonkeyCreatedEvent(UUID.randomUUID().toString(), cmd.getMatchName()));
+        apply(new GameOfDonkeyCreatedEvent(cmd.getMatchName()));
     }
 
     @CommandHandler
     public void handle(JoinGameOfDonkeyCommand cmd) {
-        apply(new GameOfDonkeyJoinedEvent(cmd.getAggregateId(), cmd.getUserName()));
+        apply(new GameOfDonkeyJoinedEvent(cmd.getMatchName(), cmd.getUserName()));
     }
 
     @CommandHandler
     public void handle(StartGameOfDonkeyCommand cmd) {
         if (players.size() < MINIMUM_NUMBER_PLAYERS) {
             logger.info(
-                    "aggregateId[" + aggregateId + "] - " +
+                    "matchName[" + matchName + "] - " +
                     "At least " + MINIMUM_NUMBER_PLAYERS + " player needs to participate in a game of Donkey"
             );
         }
 
-        apply(new GameOfDonkeyStartedEvent(aggregateId));
+        apply(new GameOfDonkeyStartedEvent(matchName));
     }
 
     @CommandHandler
@@ -58,7 +57,6 @@ public class Donkey {
 
     @EventSourcingHandler
     public void on(GameOfDonkeyCreatedEvent event) {
-        aggregateId = event.getAggregateId();
         matchName = event.getMatchName();
     }
 
@@ -72,7 +70,7 @@ public class Donkey {
         //TODO replace for actual dealing action
         List<String> cards = Collections.emptyList();
 
-        players.forEach(player -> apply(new CardsDealtForPlayerEvent(aggregateId, player, cards)));
+        players.forEach(player -> apply(new CardsDealtForPlayerEvent(matchName, player, cards)));
     }
 
     @EventSourcingHandler

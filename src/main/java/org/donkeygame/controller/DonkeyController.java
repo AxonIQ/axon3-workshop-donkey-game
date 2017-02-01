@@ -23,13 +23,12 @@ public class DonkeyController {
     @MessageMapping("/create-match")
     @SendTo("/topic/matches")
     public GameOfDonkeyResponse createDonkeyGame(CreateGameOfDonkeyRequest msg) throws ExecutionException, InterruptedException {
-        CreateGameOfDonkeyCommand command = new CreateGameOfDonkeyCommand(msg.getMatchName());
-        return commandGateway.<String>send(command)
-                .thenApply(matchId -> new GameOfDonkeyResponse(matchId, msg.getMatchName()))
+        return commandGateway.<String>send(new CreateGameOfDonkeyCommand(msg.getMatchName()))
+                .thenApply(GameOfDonkeyResponse::new)
                 .get();
     }
 
-    @MessageMapping("/join")
+    @MessageMapping("/join-match")
     @SendTo("/topic/joined")
     public CompletableFuture<Object> joinGameOfDonkey(JoinGameOfDonkeyRequest msg) {
         return commandGateway.send(new JoinGameOfDonkeyCommand(msg.getAggregateId(), msg.getUserName()));

@@ -7,20 +7,20 @@ data class CreateGameOfDonkeyRequest(
 )
 
 data class JoinGameOfDonkeyRequest(
-        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("matchName") val matchName: String,
         @JsonProperty("userName") val userName: String
 )
 
-data class StartGameOfDonkeyRequest(@JsonProperty("matchId") val aggregateId: String)
+data class StartGameOfDonkeyRequest(@JsonProperty("matchId") val matchName: String)
 
 data class PlayCardRequest(
-        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("matchName") val matchName: String,
         @JsonProperty("userName") val userName: String,
         @JsonProperty("cardNumber") val cardNumber: Int
 )
 
 data class CallGameFinishedRequest(
-        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("matchName") val matchName: String,
         @JsonProperty("userName") val userName: String
 )
 
