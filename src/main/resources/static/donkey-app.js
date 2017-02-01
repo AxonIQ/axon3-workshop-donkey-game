@@ -1,5 +1,8 @@
 var stompClient = null;
+var players = [];
 var hand = null;
+
+var joinedMatch = false;
 
 // Connection
 
@@ -51,16 +54,45 @@ function createMatch() {
 function joinMatch(request) {
     stompClient.send("/app/join-match", {}, JSON.stringify(request));
 
-    stompClient.subscribe('/topic/match/' + request.matchName + '/user/' + request.userName,
-        function (handResponse) {
-            hand = JSON.parse(handResponse.body).hand;
-            renderHand(hand);
-        });
+    if (!joinedMatch) {
+        stompClient.subscribe('/topic/match/' + request.matchName,
+            function (joinResponse) {
+                players.push(
+                    {
+                        'playerName': JSON.parse(joinResponse.body).userName,
+                        'donkeyLevel': ""
+                    }
+                );
+                renderPlayers(players);
+            });
+
+
+        stompClient.subscribe('/topic/match/' + request.matchName + '/user/' + request.userName,
+            function (handResponse) {
+                hand = JSON.parse(handResponse.body).hand;
+                renderHand(hand);
+            });
+
+        joinedMatch = true;
+    }
+
+}
+
+function renderPlayers(players) {
+    $.each(players, function (key, player) {
+        $("#player-" + key).remove();
+        $("#players").append(
+            "<tr id=\"player-" + key + "\">" +
+            "<td>" + player.playerName + "</td>" +
+            "<td>" + player.donkeyLevel + "</td>" +
+            "</tr>"
+        );
+    });
 }
 
 function renderHand(hand) {
     $.each(hand, function (key, card) {
-        var rank =  card.rank.letter;
+        var rank = card.rank.letter;
         var suit = card.suit.toLowerCase();
         $("#cards").append(
             "<li class=\"card rank-" + rank + " " + suit + "\">" +
@@ -69,7 +101,6 @@ function renderHand(hand) {
             "</li>"
         );
     });
-
 }
 
 function startMatch() {

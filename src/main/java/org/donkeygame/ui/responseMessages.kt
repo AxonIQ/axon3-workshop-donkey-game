@@ -2,7 +2,7 @@ package org.donkeygame.ui
 
 import org.donkeygame.core.Card
 
-data class GameOfDonkeyCreatedResponse(val matchName: String)
+data class JoinedResponse(val userName: String)
 
 data class AlertResponse(
         val success: Boolean,
