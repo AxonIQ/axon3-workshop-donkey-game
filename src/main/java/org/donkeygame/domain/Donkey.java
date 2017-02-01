@@ -47,11 +47,13 @@ public class Donkey {
 
     @CommandHandler
     public void handle(PlayCardCommand cmd) {
+        logger.info("reached PlayCardCommand");
         //TODO playing logic
     }
 
     @CommandHandler
     public void handle(CallGameFinishedCommand cmd) {
+        logger.info("reached CallGameFinishedCommand");
         //TODO finished logic
     }
 
