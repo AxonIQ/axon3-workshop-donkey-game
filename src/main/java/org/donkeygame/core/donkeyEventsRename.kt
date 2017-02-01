@@ -12,7 +12,7 @@ data class GameOfDonkeyJoinedEvent(
 data class CardsDealtForPlayerEvent(
         val matchName: String,
         val userName: String,
-        val cards: List<String>
+        val cards: Set<String>
 )
 
 data class CardSelectedEvent(
