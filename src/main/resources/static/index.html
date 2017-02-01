@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Donkey Axon Demo</title>
-    <title>Hello WebSocket</title>
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -22,6 +21,7 @@
 </noscript>
 <div id="main-content" class="container">
     <div class="row">
+        <h2>Connection Controls</h2>
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
@@ -37,33 +37,52 @@
                 </div>
             </form>
         </div>
+    </div>
 
+    <div>
+        <h2>Match Controls</h2>
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
                     <label for="match-name">Do you want to create a match?</label>
                     <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
+
+                    <button id="create-match" class="btn btn-default" type="submit">
+                        Create Match
+                    </button>
                 </div>
-                <button id="create-match" class="btn btn-default" type="submit">
-                    Create Match
-                </button>
             </form>
         </div>
 
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="match-table" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Matches</th>
-                </tr>
-                </thead>
-                <tbody id="matches"></tbody>
-            </table>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="match-table" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Matches</th>
+                    </tr>
+                    </thead>
+                    <tbody id="matches"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="join-match-with-name">Which match do you want to join?</label>
+                    <input type="text" id="join-match-with-name" class="form-control" placeholder="The name of the match here...">
+
+                    <label for="user-name">With what name do you want to join the match?</label>
+                    <input type="text" id="user-name" class="form-control" placeholder="Your username here...">
+
+                    <button id="join-match" class="btn btn-default" type="submit">
+                        Join Match
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    </form>
 </div>
 </body>
 </html>
