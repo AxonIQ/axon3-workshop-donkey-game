@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Donkey Axon Demo</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -21,7 +23,7 @@
 </noscript>
 <div id="main-content" class="container">
     <div class="row">
-        <h2>Connection Controls</h2>
+        <h3>Connection Controls</h3>
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
@@ -40,46 +42,44 @@
     </div>
 
     <div>
-        <h2>Match Controls</h2>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="match-name">Do you want to create a match?</label>
-                    <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
+        <h3>Match Controls</h3>
 
-                    <button id="create-match" class="btn btn-default" type="submit">
-                        Create Match
-                    </button>
-                </div>
+        <h4>Explanation</h4>
+        <div id="explanation">
+            Explanation:
+             The goal of the game is to...
+
+            Controls:
+             - 1: Press '1' to select you first card to play
+             - 2: Press '2' to select you first card to play
+             - 3: Press '3' to select you first card to play
+             - 4: Press '4' to select you first card to play
+             - Space: When the light flickers, you have four identical card or somebody else has finished. Hit space quickly!
+        </div>
+
+        <div class="col-md-6">
+            <form>
+                <label for="match-name">Do you want to create a match?</label>
+                <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
+
+                <button id="create-match" class="btn btn-default" type="submit">
+                    Create Match
+                </button>
             </form>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <table id="match-table" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Matches</th>
-                    </tr>
-                    </thead>
-                    <tbody id="matches"></tbody>
-                </table>
-            </div>
-        </div>
-
         <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="join-match-with-name">Which match do you want to join?</label>
-                    <input type="text" id="join-match-with-name" class="form-control" placeholder="The name of the match here...">
+            <form>
+                <label for="join-match-with-name">Which match do you want to join?</label>
+                <input type="text" id="join-match-with-name" class="form-control"
+                       placeholder="The name of the match here...">
 
-                    <label for="user-name">With what name do you want to join the match?</label>
-                    <input type="text" id="user-name" class="form-control" placeholder="Your username here...">
+                <label for="user-name">With what name do you want to join the match?</label>
+                <input type="text" id="user-name" class="form-control" placeholder="Your username here...">
 
-                    <button id="join-match" class="btn btn-default" type="submit">
-                        Join Match
-                    </button>
-                </div>
+                <button id="join-match" class="btn btn-default" type="submit">
+                    Join Match
+                </button>
             </form>
         </div>
     </div>
