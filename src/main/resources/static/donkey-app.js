@@ -62,7 +62,7 @@ function joinMatch(joinRequest) {
 }
 
 function startMatch() {
-    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#start-match-with-name").val()}));
+    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
 }
 
 // Listeners
