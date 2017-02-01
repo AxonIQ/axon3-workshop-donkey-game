@@ -64,6 +64,11 @@ public class DonkeyController {
     }
 
     @EventHandler
+    public void on(GameOfDonkeyStartedEvent event) {
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "You've successfully started the game [" + event.getMatchName() + "]"));
+    }
+
+    @EventHandler
     public void on(CardsPlayedEvent event) {
         event.getPlays().forEach((p, c) -> messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), p), new CardPlayMessage(c)));
     }

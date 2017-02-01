@@ -61,8 +61,8 @@ function joinMatch(joinRequest) {
 
 }
 
-function startMatch(matchName) {
-    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $(matchName).val()}));
+function startMatch() {
+    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#start-match-with-name").val()}));
 }
 
 // Listeners
@@ -88,5 +88,8 @@ $(function () {
             'userName': $("#user-name").val()
         };
         joinMatch(joinRequest);
+    });
+    $("#start-match").click(function () {
+        startMatch();
     });
 });

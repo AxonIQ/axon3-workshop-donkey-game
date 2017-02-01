@@ -4,6 +4,7 @@ body {
 
 #main-content {
     max-width: 940px;
+    max-height: 4000px;
     padding: 2em 3em;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -11,4 +12,8 @@ body {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+#boxed {
+    border: 1px solid green ;
 }

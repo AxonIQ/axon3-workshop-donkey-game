@@ -44,17 +44,19 @@
     <div>
         <h3>Match Controls</h3>
 
-        <h4>Explanation</h4>
-        <div id="explanation">
-            Explanation:
-             The goal of the game is to...
+        <div id="explanation" class="boxed">
+            <h4>Explanation</h4>
+            <div>
+                Explanation:
+                The goal of the game is to...
 
-            Controls:
-             - 1: Press '1' to select you first card to play
-             - 2: Press '2' to select you first card to play
-             - 3: Press '3' to select you first card to play
-             - 4: Press '4' to select you first card to play
-             - Space: When the light flickers, you have four identical card or somebody else has finished. Hit space quickly!
+                Controls:
+                - 1: Press '1' to select you first card to play
+                - 2: Press '2' to select you first card to play
+                - 3: Press '3' to select you first card to play
+                - 4: Press '4' to select you first card to play
+                - Space: When the light flickers, you have four identical card or somebody else has finished. Hit space quickly!
+            </div>
         </div>
 
         <div class="col-md-6">
@@ -82,6 +84,20 @@
                 </button>
             </form>
         </div>
+
+        <div class="col-md-6">
+            <form>
+                <label for="start-match-with-name">Which match do you want to start?</label>
+                <input type="text" id="start-match-with-name" class="form-control"
+                       placeholder="The name of the match here...">
+
+                <button id="start-match" class="btn btn-default" type="submit">
+                    Start Match
+                </button>
+            </form>
+        </div>
+
+
     </div>
 </div>
 </body>

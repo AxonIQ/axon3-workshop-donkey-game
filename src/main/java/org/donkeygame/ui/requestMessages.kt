@@ -9,7 +9,7 @@ data class JoinGameOfDonkeyRequest(
         @JsonProperty("userName") val userName: String
 )
 
-data class StartGameOfDonkeyRequest(@JsonProperty("matchId") val matchName: String)
+data class StartGameOfDonkeyRequest(@JsonProperty("matchName") val matchName: String)
 
 data class PlayCardRequest(
         @JsonProperty("matchName") val matchName: String,
