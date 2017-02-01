@@ -1,12 +1,10 @@
-package org.donkeygame.controller;
+package org.donkeygame.ui;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.EventHandler;
 import org.donkeygame.core.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -15,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 @Controller
 public class DonkeyController {
 
-    private static final String MATCH_PATH = "/topic/match/";
+    private static final String ALERT_PATH = "/topic/alerts";
 
     private static final boolean SUCCESS = true;
 
@@ -29,11 +27,8 @@ public class DonkeyController {
     }
 
     @MessageMapping("/create-match")
-    @SendTo("/topic/matches")
-    public GameOfDonkeyCreatedResponse createDonkeyGame(CreateGameOfDonkeyRequest msg) throws ExecutionException, InterruptedException {
-        return commandGateway.<String>send(new CreateGameOfDonkeyCommand(msg.getMatchName()))
-                .thenApply(GameOfDonkeyCreatedResponse::new)
-                .get();
+    public void createDonkeyGame(CreateGameOfDonkeyRequest msg) throws ExecutionException, InterruptedException {
+        commandGateway.send(new CreateGameOfDonkeyCommand(msg.getMatchName()));
     }
 
     @MessageMapping("/join-match")
@@ -56,13 +51,25 @@ public class DonkeyController {
         commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getUserName()));
     }
 
+
+
     @EventHandler
-    public void on(GameOfDonkeyJoinedEvent event) {
-        messagingTemplate.convertAndSend(buildDestination(MATCH_PATH, event.getMatchName()), new GameOfDonkeyJoinedResponse(SUCCESS));
+    public void on(GameOfDonkeyCreatedEvent event) {
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "You've successfully created the game [" + event.getMatchName() + "]!"));
     }
 
-    private String buildDestination(String basePath, String matchName) {
-        return basePath + matchName;
+    @EventHandler
+    public void on(GameOfDonkeyJoinedEvent event) {
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "User [" + event.getUserName() + "] successfully joined the game [" + event.getMatchName() + "]"));
+    }
+
+    @EventHandler
+    public void on(CardsPlayedEvent event) {
+        event.getPlays().forEach((p, c) -> messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), p), new CardPlayMessage(c)));
+    }
+
+    private String buildDestination(String matchName, String playerName) {
+        return "/topic/match/" + matchName + "/user/" + playerName;
     }
 
 }
