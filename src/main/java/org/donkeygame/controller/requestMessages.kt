@@ -1,21 +1,26 @@
 package org.donkeygame.controller
 
-data class CreateDonkeyGame(
-        val matchName: String
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class CreateGameOfDonkeyRequest(
+        @JsonProperty("matchName") val matchName: String
 )
 
-data class JoinGameOfDonkey(
-        val aggregateId: String,
-        val userName: String
+data class JoinGameOfDonkeyRequest(
+        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("userName") val userName: String
 )
 
-data class StartGameOfDonkey(val aggregateId: String)
+data class StartGameOfDonkeyRequest(@JsonProperty("matchId") val aggregateId: String)
 
-data class PlayCard(
-        val aggregateId: String,
-        val userName: String,
-        val cardNumber: Int
+data class PlayCardRequest(
+        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("userName") val userName: String,
+        @JsonProperty("cardNumber") val cardNumber: Int
 )
 
-data class CallGameFinished(val aggregateId: String)
+data class CallGameFinishedRequest(
+        @JsonProperty("matchId") val aggregateId: String,
+        @JsonProperty("userName") val userName: String
+)
 
