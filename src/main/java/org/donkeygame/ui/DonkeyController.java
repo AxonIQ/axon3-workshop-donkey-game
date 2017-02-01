@@ -69,6 +69,11 @@ public class DonkeyController {
     }
 
     @EventHandler
+    public void on(CardsDealtForPlayerEvent event) {
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), event.getUserName()), new HandResponse(event.getCards()));
+    }
+
+    @EventHandler
     public void on(CardsPlayedEvent event) {
         event.getPlays().forEach((p, c) -> messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), p), new CardPlayMessage(c)));
     }
