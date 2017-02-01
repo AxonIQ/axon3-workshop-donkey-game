@@ -1,5 +1,9 @@
 package org.donkeygame.controller
 
-class GameOfDonkeyResponse(
+class GameOfDonkeyCreatedResponse(
         val matchName: String
+)
+
+class GameOfDonkeyJoinedResponse(
+        val success: Boolean
 )
