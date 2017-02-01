@@ -8,16 +8,16 @@ data class StartGameOfDonkeyCommand(@TargetAggregateIdentifier val matchName: St
 
 data class JoinGameOfDonkeyCommand(
         @TargetAggregateIdentifier val matchName: String,
-        val userName: String
+        val playerName: String
 )
 
 data class PlayCardCommand(
         @TargetAggregateIdentifier val matchName: String,
-        val userName: String,
+        val playerName: String,
         val cardNumber: Int
 )
 
 data class CallGameFinishedCommand(
         @TargetAggregateIdentifier val matchName: String,
-        val userName: String
+        val playerName: String
 )

@@ -38,7 +38,7 @@ public class Donkey {
 
     @CommandHandler
     public void handle(JoinGameOfDonkeyCommand cmd) {
-        apply(new GameOfDonkeyJoinedEvent(cmd.getMatchName(), cmd.getUserName()));
+        apply(new GameOfDonkeyJoinedEvent(cmd.getMatchName(), cmd.getPlayerName()));
     }
 
     @CommandHandler
@@ -95,12 +95,12 @@ public class Donkey {
 
     @EventSourcingHandler
     public void on(GameOfDonkeyJoinedEvent event) {
-        players.add(event.getUserName());
+        players.add(event.getPlayerName());
     }
 
     @EventSourcingHandler
     public void on(CardsDealtForPlayerEvent event) {
-        cardsPerPlayer.put(event.getUserName(), event.getCards());
+        cardsPerPlayer.put(event.getPlayerName(), event.getCards());
     }
 
     @EventSourcingHandler

@@ -3,7 +3,6 @@ package org.donkeygame.ui;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.EventHandler;
 import org.donkeygame.core.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,9 +13,10 @@ import java.util.concurrent.ExecutionException;
 @Controller
 public class DonkeyController {
 
-    private static final String ALERT_PATH = "/topic/alerts";
-    private static final String MATCH_PATH = "/topic/match/";
-    private static final String USER_PATH = "/user/";
+    private static final String BASE_PATH = "/topic/";
+    private static final String ALERT_PATH = BASE_PATH + "/alerts";
+    private static final String MATCH_PATH = BASE_PATH + "/match/";
+    private static final String PLAYER_PATH = "/player/";
 
     private static final boolean SUCCESS = true;
 
@@ -36,7 +36,7 @@ public class DonkeyController {
 
     @MessageMapping("/join-match")
     public void joinGameOfDonkey(JoinGameOfDonkeyRequest msg) {
-        commandGateway.send(new JoinGameOfDonkeyCommand(msg.getMatchName(), msg.getUserName()));
+        commandGateway.send(new JoinGameOfDonkeyCommand(msg.getMatchName(), msg.getPlayerName()));
     }
 
     @MessageMapping("/start-match")
@@ -46,12 +46,12 @@ public class DonkeyController {
 
     @MessageMapping("/play-card")
     public void playCard(PlayCardRequest msg) {
-        commandGateway.send(new PlayCardCommand(msg.getMatchName(), msg.getUserName(), msg.getCardNumber()));
+        commandGateway.send(new PlayCardCommand(msg.getMatchName(), msg.getPlayerName(), msg.getCardNumber()));
     }
 
     @MessageMapping("/call-finished")
     public void callGameFinished(CallGameFinishedRequest msg) {
-        commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getUserName()));
+        commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getPlayerName()));
     }
 
 
@@ -63,9 +63,9 @@ public class DonkeyController {
 
     @EventHandler
     public void on(GameOfDonkeyJoinedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "User [" + event.getUserName() + "] successfully joined the game [" + event.getMatchName() + "]"));
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] successfully joined the game [" + event.getMatchName() + "]"));
 
-        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(event.getUserName()));
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(event.getPlayerName()));
     }
 
     @EventHandler
@@ -75,7 +75,7 @@ public class DonkeyController {
 
     @EventHandler
     public void on(CardsDealtForPlayerEvent event) {
-        messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), event.getUserName()), new HandResponse(event.getCards()));
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), event.getPlayerName()), new HandResponse(event.getCards()));
     }
 
     @EventHandler
@@ -84,7 +84,7 @@ public class DonkeyController {
     }
 
     private String buildDestination(String matchName, String playerName) {
-        return buildDestination(matchName) + USER_PATH + playerName;
+        return buildDestination(matchName) + PLAYER_PATH + playerName;
     }
 
     private String buildDestination(String matchName) {

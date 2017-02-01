@@ -59,7 +59,7 @@ function joinMatch(request) {
             function (joinResponse) {
                 players.push(
                     {
-                        'playerName': JSON.parse(joinResponse.body).userName,
+                        'playerName': JSON.parse(joinResponse.body).playerName,
                         'donkeyLevel': ""
                     }
                 );
@@ -67,7 +67,7 @@ function joinMatch(request) {
             });
 
 
-        stompClient.subscribe('/topic/match/' + request.matchName + '/user/' + request.userName,
+        stompClient.subscribe('/topic/match/' + request.matchName + '/player/' + request.playerName,
             function (handResponse) {
                 hand = JSON.parse(handResponse.body).hand;
                 renderHand(hand);
@@ -126,8 +126,8 @@ $(function () {
     });
     $("#join-match").click(function () {
         var joinRequest = {
-            'matchName': $("#join-match-with-name").val(),
-            'userName': $("#user-name").val()
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val()
         };
         joinMatch(joinRequest);
     });
