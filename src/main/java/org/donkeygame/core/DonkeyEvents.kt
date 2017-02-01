@@ -24,7 +24,7 @@ data class CardSelectedEvent(
 data class CardsPlayedEvent(
         val matchName: String,
         val playerName: String,
-        val plays : Map<String, Card>
+        val plays: Map<String, Card>
 )
 
 data class FinishedCalledEvent(val matchName: String)

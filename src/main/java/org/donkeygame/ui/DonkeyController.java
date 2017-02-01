@@ -44,7 +44,7 @@ public class DonkeyController {
         commandGateway.send(new StartGameOfDonkeyCommand(msg.getMatchName()));
     }
 
-    @MessageMapping("/play-card")
+    @MessageMapping("/select-card")
     public void playCard(SelectCardRequest msg) {
         commandGateway.send(new SelectCardCommand(msg.getMatchName(), msg.getPlayerName(), msg.getCardIndex()));
     }

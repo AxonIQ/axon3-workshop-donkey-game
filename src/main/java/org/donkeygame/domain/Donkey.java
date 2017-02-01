@@ -109,7 +109,7 @@ public class Donkey {
 
     @EventSourcingHandler
     public void on(CardsDealtForPlayerEvent event) {
-        cardsPerPlayer.put(event.getPlayerName(), event.getCards());
+        cardsPerPlayer.put(event.getPlayerName(), new ArrayList<>(event.getCards()));
     }
 
     @EventSourcingHandler
@@ -124,7 +124,8 @@ public class Donkey {
     }
 
     private void updateCardsPerPlayer(String playerName, Card selectedCard) {
-        cardsPerPlayer.get(playerName).remove(selectedCard);
+        List<Card> playersCards = cardsPerPlayer.get(playerName);
+        playersCards.remove(selectedCard);
     }
 
     private void updatePlayedCards(String playerName, Card selectedCard) {

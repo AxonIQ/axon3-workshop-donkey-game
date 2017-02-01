@@ -22,6 +22,41 @@ $(function () {
     $("#start-match").click(function () {
         startMatch();
     });
+
+
+    $("#cards").on('click', '#card-0', function () {
+        var selectCardRequest = {
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val(),
+            'cardIndex': 0
+        };
+        selectCard(selectCardRequest)
+    });
+    $("#cards").on('click', '#card-1', function () {
+        var selectCardRequest = {
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val(),
+            'cardIndex': 1
+        };
+        selectCard(selectCardRequest)
+    });
+    $("#cards").on('click', '#card-2', function () {
+        var selectCardRequest = {
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val(),
+            'cardIndex': 2
+        };
+        selectCard(selectCardRequest)
+    });
+    $("#cards").on('click', '#card-3', function () {
+        var selectCardRequest = {
+            'matchName': $("#match-name").val(),
+            'playerName': $("#player-name").val(),
+            'cardIndex': 3
+        };
+        selectCard(selectCardRequest)
+    })
+
 });
 
 function connect() {
@@ -100,14 +135,19 @@ function renderHand(hand) {
         var rank = card.rank.letter;
         var suit = card.suit.toLowerCase();
         $("#cards").append(
-            "<li class=\"card rank-" + rank + " " + suit + "\">" +
+            "<li><a id=\"card-" + key + "\" class=\"card rank-" + rank + " " + suit + "\" href=\"#\">" +
             "<span class=\"rank\">" + rank + "</span>" +
             "<span class=\"suit\">&" + suit + ";</span>" +
-            "</li>"
+            "</a></li>"
         );
     });
 }
 
 function startMatch() {
     stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
+}
+
+function selectCard(request) {
+    console.log("iam here");
+    stompClient.send("/app/select-card", {}, JSON.stringify(request));
 }
