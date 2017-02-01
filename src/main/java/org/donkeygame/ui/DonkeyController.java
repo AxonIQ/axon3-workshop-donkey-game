@@ -57,19 +57,19 @@ public class DonkeyController {
 
     @EventHandler
     public void on(GameOfDonkeyCreatedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "You've successfully created the game [" + event.getMatchName() + "]!"));
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Match [" + event.getMatchName() + "] has been created"));
     }
 
     @EventHandler
     public void on(GameOfDonkeyJoinedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] successfully joined the game [" + event.getMatchName() + "]"));
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
 
         messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(event.getPlayerName()));
     }
 
     @EventHandler
     public void on(GameOfDonkeyStartedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "You've successfully started the game [" + event.getMatchName() + "]"));
+        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "The match [" + event.getMatchName() + "] has successfully started"));
     }
 
     @EventHandler
