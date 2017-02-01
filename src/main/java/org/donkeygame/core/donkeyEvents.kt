@@ -15,10 +15,16 @@ data class CardsDealtForPlayerEvent(
         val cards: List<String>
 )
 
-data class CardPlayedEvent(
+data class CardSelectedEvent(
         val matchName: String,
         val userName: String,
-        val cardNumber: Int
+        val card: String
+)
+
+data class CardsPlayedEvent(
+        val matchName: String,
+        val userName: String,
+        val plays : Map<String, String>
 )
 
 data class FinishedCalledEvent(val matchName: String)

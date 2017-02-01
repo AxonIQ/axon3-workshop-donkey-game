@@ -85,7 +85,7 @@ public class Donkey {
     }
 
     @EventSourcingHandler
-    public void on(CardPlayedEvent event) {
+    public void on(CardSelectedEvent event) {
 
         updateCardSetup();
     }
