@@ -2,8 +2,6 @@ var stompClient = null;
 var alert_id = 0;
 var dismiss_id = 0;
 
-// Infra
-
 $(function () {
     connect();
 
@@ -16,8 +14,8 @@ $(function () {
     });
     $("#join-match").click(function () {
         var joinRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val()
+            'matchName': getMatchName(),
+            'playerName': getPlayerName()
         };
         joinMatch(joinRequest);
         disableInputFields();
@@ -41,7 +39,6 @@ $(function () {
     })
 
 });
-
 function connect() {
     var socket = new SockJS('/donkey-websocket');
     stompClient = Stomp.over(socket);
@@ -73,6 +70,12 @@ function sendAlert(success, response) {
 function disableInputFields() {
     $("#match-name").prop("disabled", true);
     $("#player-name").prop("disabled", true);
+    $("#create-match").prop("disabled", true);
+    $("#join-match").prop("disabled", true);
+}
+
+function disableStartMatchButton() {
+    $("#start-match").prop("disabled", true);
 }
 
 function selectCardIfPossible(cardIndex) {
@@ -87,14 +90,13 @@ function alreadySelectedACard() {
     return hand.length == 3;
 }
 
-// Game
-
 var players = [];
+
 var hand = null;
 var joinedMatch = false;
 
 function createMatch() {
-    stompClient.send("/app/create-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
+    stompClient.send("/app/create-match", {}, JSON.stringify({'matchName': getMatchName()}));
 }
 
 function joinMatch(request) {
@@ -123,6 +125,7 @@ function joinMatch(request) {
                     renderOutcome(responseBody.outcome);
                 } else if ('hand' in responseBody) {
                     hand = responseBody.hand;
+                    disableStartMatchButton();
                 } else if ('card' in responseBody) {
                     hand.push(responseBody.card);
                 }
@@ -173,7 +176,7 @@ function renderOutcome(outcome) {
 }
 
 function startMatch() {
-    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
+    stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': getMatchName()}));
 }
 
 function selectCard(cardIndex) {
@@ -183,9 +186,17 @@ function selectCard(cardIndex) {
 
     //Send select request
     var request = {
-        'matchName': $("#match-name").val(),
-        'playerName': $("#player-name").val(),
+        'matchName': getMatchName(),
+        'playerName': getPlayerName(),
         'cardIndex': cardIndex
     };
     stompClient.send("/app/select-card", {}, JSON.stringify(request));
+}
+
+function getMatchName() {
+    return $("#match-name").val().split(' ').join('');
+}
+
+function getPlayerName() {
+    return $("#player-name").val().split(' ').join('');
 }
