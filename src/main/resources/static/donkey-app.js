@@ -98,8 +98,9 @@ function joinMatch(request) {
         var matchDestination = '/topic/match/' + request.matchName;
         console.log("subscribe to [" + matchDestination + "]");
         stompClient.subscribe(matchDestination,
-            function (joinResponse) {
-                replacePlayers(JSON.parse(joinResponse.body).players);
+            function (matchResponse) {
+                var responseBody = JSON.parse(matchResponse.body);
+                players = responseBody.players;
                 renderPlayers(players);
             });
 
@@ -109,9 +110,11 @@ function joinMatch(request) {
         stompClient.subscribe(playerDestination,
             function (gameResponse) {
                 var responseBody = JSON.parse(gameResponse.body);
-                if('canFinish' in responseBody) {
+                if ('canFinish' in responseBody) {
                     var canFinish = responseBody.canFinish;
                     $("#call-finish-button").prop("disabled", !canFinish);
+                } else if ('outcome' in responseBody) {
+                    renderOutcome(responseBody.outcome);
                 } else if ('hand' in responseBody) {
                     hand = responseBody.hand;
                 } else if ('card' in responseBody) {
@@ -125,25 +128,12 @@ function joinMatch(request) {
 
 }
 
-function replacePlayers(playersList) {
-    players = [];
-    $.each(playersList, function (key, playerName) {
-        players.push(
-            {
-                'playerName': playerName,
-                'donkeyLevel': ""
-            }
-        );
-    });
-}
-
 function renderPlayers(players) {
     $.each(players, function (key, player) {
         $("#player-" + key).remove();
         $("#players").append(
             "<tr id=\"player-" + key + "\">" +
-            "<td>" + player.playerName + "</td>" +
-            "<td>" + player.donkeyLevel + "</td>" +
+            "<td>" + player + "</td>" +
             "</tr>"
         );
     });
@@ -166,6 +156,14 @@ function renderHand(hand) {
             "</a></li>"
         );
     });
+}
+
+function renderOutcome(outcome) {
+    if(outcome) {
+        $("#outcome").append("<img src=\"winner.png\">");
+    } else {
+        $("#outcome").append("<img src=\"loser.png\">");
+    }
 }
 
 function startMatch() {
