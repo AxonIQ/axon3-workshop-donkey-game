@@ -88,10 +88,13 @@ function joinMatch(request) {
         var playerDestination = matchDestination + '/player/' + request.playerName;
         console.log("subscribe to [" + playerDestination + "]");
         stompClient.subscribe(playerDestination,
-            function (handResponse) {
-                console.log("iam here");
-                console.log(handResponse);
-                hand = JSON.parse(handResponse.body).hand;
+            function (cardsResponse) {
+                var responseBody = JSON.parse(cardsResponse.body);
+                if ('hand' in responseBody) {
+                    hand = responseBody.hand;
+                } else if ('card' in responseBody) {
+                    hand.push(responseBody.card);
+                }
                 renderHand(hand);
             });
 
@@ -113,6 +116,12 @@ function renderPlayers(players) {
 }
 
 function renderHand(hand) {
+    // Remove previous hand
+    for (var i = 0; i < 4; i++) {
+        $("#card-" + i).remove();
+    }
+
+    // Render current hand
     $.each(hand, function (key, card) {
         var rank = card.rank.letter;
         var suit = card.suit.toLowerCase();
@@ -130,6 +139,11 @@ function startMatch() {
 }
 
 function selectCard(cardIndex) {
+    //Remove selected card
+    hand.splice(cardIndex, 1);
+    renderHand(hand);
+
+    //Send select request
     var request = {
         'matchName': $("#match-name").val(),
         'playerName': $("#player-name").val(),
