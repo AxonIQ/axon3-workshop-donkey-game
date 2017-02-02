@@ -5,6 +5,7 @@ import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.donkeygame.core.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,12 +116,20 @@ public class Donkey {
     @EventSourcingHandler
     public void on(CardSelectedEvent event) {
         updateCardsPerPlayer(event.getPlayerName(), event.getSelectedCard());
-        updatePlayedCards(event.getPlayerName(), event.getSelectedCard());
+        updatePlayedCards(nextPlayer(event.getPlayerName()), event.getSelectedCard());
 
         if (everybodySelectedACard()) {
             players.forEach(playerName -> apply(new CardsPlayedEvent(matchName, playerName, new HashMap<>(playedCards))));
             playedCards.clear();
         }
+    }
+
+    private String nextPlayer(String playerName) {
+        ArrayList<String> playersList = new ArrayList<>(players);
+        int playerIndex = playersList.indexOf(playerName) + 1;
+        int numberOfPlayers = playersList.size();
+        int nextPlayerIndex = ((numberOfPlayers + playerIndex) % numberOfPlayers) - 1;
+        return playersList.get(nextPlayerIndex);
     }
 
     private void updateCardsPerPlayer(String playerName, Card selectedCard) {
