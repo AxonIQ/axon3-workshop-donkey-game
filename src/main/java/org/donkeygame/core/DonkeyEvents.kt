@@ -1,10 +1,10 @@
 package org.donkeygame.core
 
-data class GameOfDonkeyCreatedEvent(val matchName: String)
+data class GameCreatedEvent(val matchName: String)
 
-data class GameOfDonkeyStartedEvent(val matchName: String)
+data class GameStartedEvent(val matchName: String)
 
-data class GameOfDonkeyJoinedEvent(
+data class GameJoinedEvent(
         val matchName: String,
         val playerName: String
 )

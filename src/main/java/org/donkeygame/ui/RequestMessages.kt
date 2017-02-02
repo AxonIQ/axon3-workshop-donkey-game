@@ -2,14 +2,14 @@ package org.donkeygame.ui
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class CreateGameOfDonkeyRequest(@JsonProperty("matchName") val matchName: String)
+data class CreateGameRequest(@JsonProperty("matchName") val matchName: String)
 
-data class JoinGameOfDonkeyRequest(
+data class JoinGameRequest(
         @JsonProperty("matchName") val matchName: String,
         @JsonProperty("playerName") val playerName: String
 )
 
-data class StartGameOfDonkeyRequest(@JsonProperty("matchName") val matchName: String)
+data class StartGameRequest(@JsonProperty("matchName") val matchName: String)
 
 data class SelectCardRequest(
         @JsonProperty("matchName") val matchName: String,

@@ -13,4 +13,4 @@ data class HandResponse(val hand: List<Card>)
 
 data class PlayedCardResponse(val card: Card)
 
-data class FinishPossibilityResponse(val canFinish: Boolean)
+data class ToggleFinishButtonResponse(val canFinish: Boolean)

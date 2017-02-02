@@ -25,7 +25,7 @@ public class Donkey {
     @AggregateIdentifier
     private String matchName;
     private Set<String> players = new HashSet<>();
-    private Map<String, List<Card>> cardsPerPlayer = new HashMap<>();
+    private Map<String, List<Card>> handPerPlayer = new HashMap<>();
     private Map<String, Card> playedCards = new HashMap<>();
 
     public Donkey() {
@@ -33,17 +33,17 @@ public class Donkey {
     }
 
     @CommandHandler
-    public Donkey(CreateGameOfDonkeyCommand cmd) {
-        apply(new GameOfDonkeyCreatedEvent(cmd.getMatchName()));
+    public Donkey(CreateGameCommand cmd) {
+        apply(new GameCreatedEvent(cmd.getMatchName()));
     }
 
     @CommandHandler
-    public void handle(JoinGameOfDonkeyCommand cmd) {
-        apply(new GameOfDonkeyJoinedEvent(cmd.getMatchName(), cmd.getPlayerName()));
+    public void handle(JoinGameCommand cmd) {
+        apply(new GameJoinedEvent(cmd.getMatchName(), cmd.getPlayerName()));
     }
 
     @CommandHandler
-    public void handle(StartGameOfDonkeyCommand cmd) {
+    public void handle(StartGameCommand cmd) {
         if (players.size() < MINIMUM_NUMBER_PLAYERS) {
             logger.info(
                     "matchName[" + matchName + "] - " +
@@ -58,7 +58,7 @@ public class Donkey {
             return;
         }
 
-        apply(new GameOfDonkeyStartedEvent(matchName));
+        apply(new GameStartedEvent(matchName));
 
         dealCards().forEach((player, cards) -> apply(new CardsDealtForPlayerEvent(matchName, player, cards)));
     }
@@ -89,37 +89,32 @@ public class Donkey {
             return;
         }
 
-        Card selectedCard = cardsPerPlayer.get(playerName).get(cmd.getCardIndex());
+        Card selectedCard = handPerPlayer.get(playerName).get(cmd.getCardIndex());
         apply(new CardSelectedEvent(cmd.getMatchName(), playerName, selectedCard));
     }
 
-    @CommandHandler
-    public void handle(CallGameFinishedCommand cmd) {
-        //TODO finish logic
-    }
-
     @EventSourcingHandler
-    public void on(GameOfDonkeyCreatedEvent event) {
+    public void on(GameCreatedEvent event) {
         matchName = event.getMatchName();
     }
 
     @EventSourcingHandler
-    public void on(GameOfDonkeyJoinedEvent event) {
+    public void on(GameJoinedEvent event) {
         players.add(event.getPlayerName());
     }
 
     @EventSourcingHandler
     public void on(CardsDealtForPlayerEvent event) {
-        cardsPerPlayer.put(event.getPlayerName(), new ArrayList<>(event.getCards()));
+        handPerPlayer.put(event.getPlayerName(), new ArrayList<>(event.getCards()));
     }
 
     @EventSourcingHandler
     public void on(CardSelectedEvent event) {
         String nextPlayer = playerAfter(event.getPlayerName());
-        updateCardsPerPlayer(event.getPlayerName(), nextPlayer, event.getSelectedCard());
+        updatePlayerHands(event.getPlayerName(), nextPlayer, event.getSelectedCard());
         updatePlayedCards(nextPlayer, event.getSelectedCard());
 
-        if (everybodySelectedACard()) {
+        if (allPlayersPlayedACard()) {
             players.forEach(playerName -> apply(new CardPlayedEvent(matchName, playerName, playedCards.get(playerName))));
             playedCards.clear();
         }
@@ -133,17 +128,17 @@ public class Donkey {
         return playersList.get(nextPlayerIndex);
     }
 
-    private void updateCardsPerPlayer(String playerName, String nextPlayer, Card selectedCard) {
-        List<Card> playersCards = cardsPerPlayer.get(playerName);
+    private void updatePlayerHands(String playerName, String nextPlayer, Card selectedCard) {
+        List<Card> playersCards = handPerPlayer.get(playerName);
         playersCards.remove(selectedCard);
-        cardsPerPlayer.get(nextPlayer).add(selectedCard);
+        handPerPlayer.get(nextPlayer).add(selectedCard);
     }
 
     private void updatePlayedCards(String playerName, Card selectedCard) {
         playedCards.put(playerName, selectedCard);
     }
 
-    private boolean everybodySelectedACard() {
+    private boolean allPlayersPlayedACard() {
         return playedCards.size() == players.size();
     }
 

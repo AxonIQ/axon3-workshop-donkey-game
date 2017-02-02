@@ -2,11 +2,11 @@ package org.donkeygame.core
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier
 
-data class CreateGameOfDonkeyCommand(val matchName: String)
+data class CreateGameCommand(val matchName: String)
 
-data class StartGameOfDonkeyCommand(@TargetAggregateIdentifier val matchName: String)
+data class StartGameCommand(@TargetAggregateIdentifier val matchName: String)
 
-data class JoinGameOfDonkeyCommand(
+data class JoinGameCommand(
         @TargetAggregateIdentifier val matchName: String,
         val playerName: String
 )
