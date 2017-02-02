@@ -25,36 +25,16 @@ $(function () {
 
 
     $("#cards").on('click', '#card-0', function () {
-        var selectCardRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val(),
-            'cardIndex': 0
-        };
-        selectCard(selectCardRequest)
+        selectCard(0);
     });
     $("#cards").on('click', '#card-1', function () {
-        var selectCardRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val(),
-            'cardIndex': 1
-        };
-        selectCard(selectCardRequest)
+        selectCard(1);
     });
     $("#cards").on('click', '#card-2', function () {
-        var selectCardRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val(),
-            'cardIndex': 2
-        };
-        selectCard(selectCardRequest)
+        selectCard(2);
     });
     $("#cards").on('click', '#card-3', function () {
-        var selectCardRequest = {
-            'matchName': $("#match-name").val(),
-            'playerName': $("#player-name").val(),
-            'cardIndex': 3
-        };
-        selectCard(selectCardRequest)
+        selectCard(3);
     })
 
 });
@@ -92,7 +72,7 @@ function joinMatch(request) {
 
     if (!joinedMatch) {
         var matchDestination = '/topic/match/' + request.matchName;
-        console.log("subscribe to [\" + matchDestination + \"]");
+        console.log("subscribe to [" + matchDestination + "]");
         stompClient.subscribe(matchDestination,
             function (joinResponse) {
                 players.push(
@@ -106,9 +86,11 @@ function joinMatch(request) {
 
 
         var playerDestination = matchDestination + '/player/' + request.playerName;
-        console.log("subscribe to [\" + playerDestination + \"]");
+        console.log("subscribe to [" + playerDestination + "]");
         stompClient.subscribe(playerDestination,
             function (handResponse) {
+                console.log("iam here");
+                console.log(handResponse);
                 hand = JSON.parse(handResponse.body).hand;
                 renderHand(hand);
             });
@@ -147,7 +129,11 @@ function startMatch() {
     stompClient.send("/app/start-match", {}, JSON.stringify({'matchName': $("#match-name").val()}));
 }
 
-function selectCard(request) {
-    console.log("iam here");
+function selectCard(cardIndex) {
+    var request = {
+        'matchName': $("#match-name").val(),
+        'playerName': $("#player-name").val(),
+        'cardIndex': cardIndex
+    };
     stompClient.send("/app/select-card", {}, JSON.stringify(request));
 }

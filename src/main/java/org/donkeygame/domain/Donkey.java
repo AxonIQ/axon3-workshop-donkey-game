@@ -118,7 +118,7 @@ public class Donkey {
         updatePlayedCards(event.getPlayerName(), event.getSelectedCard());
 
         if (everybodySelectedACard()) {
-            players.forEach(playerName -> apply(new CardsPlayedEvent(matchName, playerName, playedCards)));
+            players.forEach(playerName -> apply(new CardsPlayedEvent(matchName, playerName, new HashMap<>(playedCards))));
             playedCards.clear();
         }
     }

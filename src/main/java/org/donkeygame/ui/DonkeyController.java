@@ -45,7 +45,7 @@ public class DonkeyController {
     }
 
     @MessageMapping("/select-card")
-    public void playCard(SelectCardRequest msg) {
+    public void selectCard(SelectCardRequest msg) {
         commandGateway.send(new SelectCardCommand(msg.getMatchName(), msg.getPlayerName(), msg.getCardIndex()));
     }
 
