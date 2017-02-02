@@ -92,7 +92,7 @@ public class DonkeyController {
         );
     }
 
-    //TODO Implement your own event here
+    //TODO Replace the Object for your own event
     @EventHandler
     public void on(Object finishedPossibilityEvent) {
         boolean canFinish = true;
