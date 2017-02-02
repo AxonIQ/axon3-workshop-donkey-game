@@ -54,7 +54,7 @@ function connect() {
 }
 
 function sendAlert(success, response) {
-    alert(response);
+    $("#alert-container").replaceWith(response);
 }
 
 function selectCardIfPossible(cardIndex) {
@@ -95,9 +95,12 @@ function joinMatch(request) {
         var playerDestination = matchDestination + '/player/' + request.playerName;
         console.log("subscribe to [" + playerDestination + "]");
         stompClient.subscribe(playerDestination,
-            function (cardsResponse) {
-                var responseBody = JSON.parse(cardsResponse.body);
-                if ('hand' in responseBody) {
+            function (gameResponse) {
+                var responseBody = JSON.parse(gameResponse.body);
+                if('canFinish' in responseBody) {
+                    var canFinish = responseBody.canFinish;
+                    $("#call-finish-button").prop("disabled", !canFinish);
+                } else if ('hand' in responseBody) {
                     hand = responseBody.hand;
                 } else if ('card' in responseBody) {
                     hand.push(responseBody.card);

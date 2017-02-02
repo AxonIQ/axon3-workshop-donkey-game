@@ -91,6 +91,15 @@ public class DonkeyController {
         );
     }
 
+    @EventHandler
+    public void on(Object finishedPossibilityEvent) {
+        boolean canFinish = true;
+        String destination = buildDestination("matchName", "playerName");
+        messagingTemplate.convertAndSend(
+                destination, new FinishPossibilityResponse(canFinish)
+        );
+    }
+
     private String buildDestination(String matchName, String playerName) {
         return buildDestination(matchName) + PLAYER_PATH + playerName;
     }
