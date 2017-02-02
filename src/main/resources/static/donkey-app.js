@@ -20,6 +20,7 @@ $(function () {
             'playerName': $("#player-name").val()
         };
         joinMatch(joinRequest);
+        disableInputFields();
     });
     $("#start-match").click(function () {
         startMatch();
@@ -56,17 +57,22 @@ function connect() {
 }
 
 function sendAlert(success, response) {
-  alert_id++;
-  var template = "<div id='" + alert_id + "' class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
-  template = template + "[" + alert_id + "] " + response + "</div>"
+    alert_id++;
+    var template = "<div id='" + alert_id + "' class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+    template = template + "[" + alert_id + "] " + response + "</div>"
 
     $("#alert-container").append(template);
-    window.setTimeout(function() {
+    window.setTimeout(function () {
         dismiss_id++;
-        $("#"+dismiss_id).fadeTo(500, 0).slideUp(500, function(){
+        $("#" + dismiss_id).fadeTo(500, 0).slideUp(500, function () {
             $(this).remove();
         });
     }, 4000);
+}
+
+function disableInputFields() {
+    $("#match-name").prop("disabled", true);
+    $("#player-name").prop("disabled", true);
 }
 
 function selectCardIfPossible(cardIndex) {
@@ -159,7 +165,7 @@ function renderHand(hand) {
 }
 
 function renderOutcome(outcome) {
-    if(outcome) {
+    if (outcome) {
         $("#outcome").append("<img class=\"outcome-image\" src=\"winner.png\">");
     } else {
         $("#outcome").append("<img class=\"outcome-image\" src=\"loser.png\">");
