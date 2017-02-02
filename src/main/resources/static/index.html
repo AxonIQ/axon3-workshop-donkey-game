@@ -15,7 +15,7 @@
 <noscript>
     <h2 style="color: #ff0000">
         Seems your browser doesn't support Javascript!
-        Websocket relies on Javascript being enabled.
+        WebSocket relies on Javascript being enabled.
         Please enable Javascript and reload this page!
     </h2>
 </noscript>
@@ -23,22 +23,16 @@
     <h2>Donkey Time!</h2>
 
     <div>
-        <h3>Match Controls</h3>
-
-        <div id="explanation" class="boxed">
-            <h4>Explanation</h4>
+        <div id="controls-explanation" class="boxed">
+            <h4>Controls</h4>
             <div>
-                - The goal of the game is to...<br>
-                Explanation:<br>
-                <br>
-                Controls:<br>
                 - Press a card to select it to be given to the next player <br>
                 - Hit space bar once the light flickers, because either you or somebody else has four identical
                 cards!<br>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div id="controls" class="col-md-6">
             <form>
                 <label for="match-name">What match do you want to create/join?</label>
                 <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
@@ -54,6 +48,7 @@
     </div>
 
 </div>
+
 <div id="match" class="container">
     <h3>The Match</h3>
     <div class="column">
@@ -69,7 +64,7 @@
     <div id="hand" class="column">
         <h3>Hand</h3>
         <div id="something" class="playingCards faceImages">
-            <ul id="cards" class="table"/>
+            <ul id="cards" class="table"></ul>
         </div>
     </div>
 </div>
