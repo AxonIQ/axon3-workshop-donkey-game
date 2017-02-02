@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Donkey Axon Demo</title>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
-    <link href="/cards.css" rel="stylesheet">
-    <script src="/webjars/jquery/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/donkey-app.js"></script>
+    <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+    <link href="cards.css" rel="stylesheet">
+    <script src="webjars/jquery/jquery.min.js"></script>
+    <script src="webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="donkey-app.js"></script>
 </head>
-<body>
+<body class="">
 <noscript>
     <h2 style="color: #ff0000">
         Seems your browser doesn't support Javascript!
@@ -32,16 +32,22 @@
             </div>
         </div>
 
-        <div id="controls" class="col-md-6">
+        <div id="controls" class="row">
             <form>
-                <label for="match-name">What match do you want to create/join?</label>
-                <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
-                <label for="player-name">With what name do you want to join the match?</label>
-                <input type="text" id="player-name" class="form-control" placeholder="Your name here...">
+                <form_control class="col-sm-6">
+                    <label for="match-name">What match do you want to create/join?</label>
+                    <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
+                </form_control>
+                <form_control class="col-sm-6">
+                    <label for="player-name">With what name do you want to join the match?</label>
+                    <input type="text" id="player-name" class="form-control" placeholder="Your name here...">
+                </form_control>
 
-                <button id="create-match" class="btn btn-default" type="submit"> Create Match</button>
-                <button id="join-match" class="btn btn-default" type="submit"> Join Match</button>
-                <button id="start-match" class="btn btn-default" type="submit"> Start Match</button>
+                <form_control class="col-sm-12">
+                    <button id="create-match" class="btn btn-default" type="submit"> Create Match</button>
+                    <button id="join-match" class="btn btn-default" type="submit"> Join Match</button>
+                    <button id="start-match" class="btn btn-default" type="submit"> Start Match</button>
+                </form_control>
             </form>
         </div>
 
@@ -50,21 +56,27 @@
 </div>
 
 <div id="match" class="container">
-    <h3>The Match</h3>
-    <div class="column">
-        <h4>Players</h4>
-        <table id="players" style="width:80%">
-            <tr class="inner">
-                <th>Name</th>
-                <th>Donkey Level</th>
-            </tr>
-        </table>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h4>Players</h4>
+            <table id="players">
+                <tr>
+                    <th>Name</th>
+                    <th>Donkey Level</th>
+                </tr>
+            </table>
+        </div>
     </div>
 
-    <div id="hand" class="column">
+    <div id="hand" class="row">
         <h3>Hand</h3>
-        <div id="something" class="playingCards faceImages">
+        <div class="playingCards faceImages col-sm-6">
             <ul id="cards" class="table"></ul>
+        </div>
+        <div id="button" class="col-sm-6">
+            <button id="call-finish-button">
+                <img class="finished-button" src="button.jpg">
+            </button>
         </div>
     </div>
 </div>
