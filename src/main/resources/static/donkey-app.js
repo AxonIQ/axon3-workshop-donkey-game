@@ -160,9 +160,9 @@ function renderHand(hand) {
 
 function renderOutcome(outcome) {
     if(outcome) {
-        $("#outcome").append("<img src=\"winner.png\">");
+        $("#outcome").append("<img class=\"outcome-image\" src=\"winner.png\">");
     } else {
-        $("#outcome").append("<img src=\"loser.png\">");
+        $("#outcome").append("<img class=\"outcome-image\" src=\"loser.png\">");
     }
 }
 
