@@ -1,4 +1,6 @@
 var stompClient = null;
+var alert_id = 0;
+var dismiss_id = 0;
 
 // Infra
 
@@ -54,10 +56,17 @@ function connect() {
 }
 
 function sendAlert(success, response) {
-  var template = "<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
-  template = template + response + "</div>"
+  alert_id++;
+  var template = "<div id='" + alert_id + "' class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+  template = template + "[" + alert_id + "] " + response + "</div>"
 
     $("#alert-container").append(template);
+    window.setTimeout(function() {
+        dismiss_id++;
+        $("#"+dismiss_id).fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 4000);
 }
 
 function selectCardIfPossible(cardIndex) {
