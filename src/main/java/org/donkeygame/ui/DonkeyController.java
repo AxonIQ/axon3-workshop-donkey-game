@@ -8,7 +8,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -25,29 +26,29 @@ public class DonkeyController {
     private final CommandGateway commandGateway;
     private final SimpMessagingTemplate messagingTemplate;
 
-    private final Set<String> players;
+    private final Map<String, Set<String>> playersPerMatch;
 
     @Autowired
     public DonkeyController(CommandGateway commandGateway, SimpMessagingTemplate messagingTemplate) {
         this.commandGateway = commandGateway;
         this.messagingTemplate = messagingTemplate;
 
-        players = new HashSet<>();
+        playersPerMatch = new HashMap<>();
     }
 
     @MessageMapping("/create-match")
-    public void createDonkeyGame(CreateGameOfDonkeyRequest msg) throws ExecutionException, InterruptedException {
-        commandGateway.send(new CreateGameOfDonkeyCommand(msg.getMatchName()));
+    public void createDonkeyGame(CreateGameRequest msg) throws ExecutionException, InterruptedException {
+        commandGateway.send(new CreateGameCommand(msg.getMatchName()));
     }
 
     @MessageMapping("/join-match")
-    public void joinGameOfDonkey(JoinGameOfDonkeyRequest msg) {
-        commandGateway.send(new JoinGameOfDonkeyCommand(msg.getMatchName(), msg.getPlayerName()));
+    public void joinGameOfDonkey(JoinGameRequest msg) {
+        commandGateway.send(new JoinGameCommand(msg.getMatchName(), msg.getPlayerName()));
     }
 
     @MessageMapping("/start-match")
-    public void startGameOfDonkey(StartGameOfDonkeyRequest msg) {
-        commandGateway.send(new StartGameOfDonkeyCommand(msg.getMatchName()));
+    public void startGameOfDonkey(StartGameRequest msg) {
+        commandGateway.send(new StartGameCommand(msg.getMatchName()));
     }
 
     @MessageMapping("/select-card")
@@ -60,22 +61,22 @@ public class DonkeyController {
         commandGateway.send(new CallGameFinishedCommand(msg.getMatchName(), msg.getPlayerName()));
     }
 
-
     @EventHandler
-    public void on(GameOfDonkeyCreatedEvent event) {
+    public void on(GameCreatedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Match [" + event.getMatchName() + "] has been created"));
     }
 
     @EventHandler
-    public void on(GameOfDonkeyJoinedEvent event) {
+    public void on(GameJoinedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
 
-        players.add(event.getPlayerName());
-        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(players));
+        Set<String> playersForMatch = playersPerMatch.get(event.getMatchName());
+        playersForMatch.add(event.getPlayerName());
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(playersForMatch));
     }
 
     @EventHandler
-    public void on(GameOfDonkeyStartedEvent event) {
+    public void on(GameStartedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "The match [" + event.getMatchName() + "] has successfully started"));
     }
 
@@ -91,12 +92,13 @@ public class DonkeyController {
         );
     }
 
+    //TODO Implement your own event here
     @EventHandler
     public void on(Object finishedPossibilityEvent) {
         boolean canFinish = true;
         String destination = buildDestination("matchName", "playerName");
         messagingTemplate.convertAndSend(
-                destination, new FinishPossibilityResponse(canFinish)
+                destination, new ToggleFinishButtonResponse(canFinish)
         );
     }
 
