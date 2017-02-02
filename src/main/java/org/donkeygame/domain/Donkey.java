@@ -95,8 +95,7 @@ public class Donkey {
 
     @CommandHandler
     public void handle(CallGameFinishedCommand cmd) {
-        logger.info("reached CallGameFinishedCommand");
-        //TODO finished logic
+        //TODO finish logic
     }
 
     @EventSourcingHandler
@@ -116,11 +115,12 @@ public class Donkey {
 
     @EventSourcingHandler
     public void on(CardSelectedEvent event) {
-        updateCardsPerPlayer(event.getPlayerName(), event.getSelectedCard());
-        updatePlayedCards(playerAfter(event.getPlayerName()), event.getSelectedCard());
+        String nextPlayer = playerAfter(event.getPlayerName());
+        updateCardsPerPlayer(event.getPlayerName(), nextPlayer, event.getSelectedCard());
+        updatePlayedCards(nextPlayer, event.getSelectedCard());
 
         if (everybodySelectedACard()) {
-            players.forEach(playerName -> apply(new CardsPlayedEvent(matchName, playerName, new HashMap<>(playedCards))));
+            players.forEach(playerName -> apply(new CardPlayedEvent(matchName, playerName, playedCards.get(playerName))));
             playedCards.clear();
         }
     }
@@ -133,9 +133,10 @@ public class Donkey {
         return playersList.get(nextPlayerIndex);
     }
 
-    private void updateCardsPerPlayer(String playerName, Card selectedCard) {
+    private void updateCardsPerPlayer(String playerName, String nextPlayer, Card selectedCard) {
         List<Card> playersCards = cardsPerPlayer.get(playerName);
         playersCards.remove(selectedCard);
+        cardsPerPlayer.get(nextPlayer).add(selectedCard);
     }
 
     private void updatePlayedCards(String playerName, Card selectedCard) {

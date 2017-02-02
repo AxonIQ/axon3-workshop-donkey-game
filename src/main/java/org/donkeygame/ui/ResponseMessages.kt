@@ -11,4 +11,4 @@ data class AlertResponse(
 
 data class HandResponse(val hand: List<Card>)
 
-data class CardPlayResponse(val card: Card)
+data class PlayedCardResponse(val card: Card)

@@ -85,10 +85,10 @@ public class DonkeyController {
     }
 
     @EventHandler
-    public void on(CardsPlayedEvent event) {
-        event.getPlays().forEach((player, card) -> messagingTemplate.convertAndSend(
-                buildDestination(event.getMatchName(), player), new CardPlayResponse(card)
-        ));
+    public void on(CardPlayedEvent event) {
+        messagingTemplate.convertAndSend(
+                buildDestination(event.getMatchName(), event.getPlayerName()), new PlayedCardResponse(event.getPlayedCard())
+        );
     }
 
     private String buildDestination(String matchName, String playerName) {
