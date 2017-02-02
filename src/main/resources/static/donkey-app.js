@@ -25,16 +25,16 @@ $(function () {
 
 
     $("#cards").on('click', '#card-0', function () {
-        selectCard(0);
+        selectCardIfPossible(0);
     });
     $("#cards").on('click', '#card-1', function () {
-        selectCard(1);
+        selectCardIfPossible(1);
     });
     $("#cards").on('click', '#card-2', function () {
-        selectCard(2);
+        selectCardIfPossible(2);
     });
     $("#cards").on('click', '#card-3', function () {
-        selectCard(3);
+        selectCardIfPossible(3);
     })
 
 });
@@ -55,6 +55,18 @@ function connect() {
 
 function sendAlert(success, response) {
     alert(response);
+}
+
+function selectCardIfPossible(cardIndex) {
+    if (alreadySelectedACard()) {
+        sendAlert(false, "You've already selected a card")
+    } else {
+        selectCard(cardIndex);
+    }
+}
+
+function alreadySelectedACard() {
+    return hand.length == 3;
 }
 
 // Game
