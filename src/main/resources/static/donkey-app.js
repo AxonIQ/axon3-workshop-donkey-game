@@ -54,7 +54,10 @@ function connect() {
 }
 
 function sendAlert(success, response) {
-    $("#alert-container").replaceWith(response);
+  var template = "<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+  template = template + response + "</div>"
+
+    $("#alert-container").append(template);
 }
 
 function selectCardIfPossible(cardIndex) {

@@ -6,7 +6,6 @@
     <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="main.css" rel="stylesheet">
     <link href="cards.css" rel="stylesheet">
-    <script src="webjars/bootstrap/js/bootstrap.min.js"></script>
     <script src="webjars/jquery/jquery.min.js"></script>
     <script src="webjars/sockjs-client/sockjs.min.js"></script>
     <script src="webjars/stomp-websocket/stomp.min.js"></script>
@@ -82,12 +81,10 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="alert alert-success alert-dismissable">
-        <span id="alert-container">
-        </span>
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-    </div>
+<div id="alert-container" class="container">
+    <h3>Messages</h3>
 </div>
+<script src="webjars/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>
