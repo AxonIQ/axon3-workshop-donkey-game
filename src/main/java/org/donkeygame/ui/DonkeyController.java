@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -70,7 +71,7 @@ public class DonkeyController {
     public void on(GameJoinedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
 
-        Set<String> playersForMatch = playersPerMatch.get(event.getMatchName());
+        Set<String> playersForMatch = playersPerMatch.computeIfAbsent(event.getMatchName(), matchName -> new HashSet<>());
         playersForMatch.add(event.getPlayerName());
         messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(playersForMatch));
     }
@@ -92,14 +93,23 @@ public class DonkeyController {
         );
     }
 
-    //TODO Replace the Object for your own event
+    //TODO Replace the Object parameter for your own event
     @EventHandler
-    public void on(Object finishedPossibilityEvent) {
-        boolean canFinish = true;
+    public void onFinishToggled(/*Object finishToggledEvent*/) {
+        boolean canFinish = true; // Retrieve from event
         String destination = buildDestination("matchName", "playerName");
         messagingTemplate.convertAndSend(
                 destination, new ToggleFinishButtonResponse(canFinish)
         );
+    }
+
+    //TODO Replace the Object parameter for your own event
+    @EventHandler
+    public void onOutcomeEvent(/*Object outcomeEvent*/) {
+        Map<String, Boolean> outcomePerPlayer = new HashMap<>(); // Retrieve from event
+        outcomePerPlayer.forEach((player, outcome) -> messagingTemplate.convertAndSend(
+                buildDestination("matchName", player), new OutcomeResponse(outcome)
+        ));
     }
 
     private String buildDestination(String matchName, String playerName) {
