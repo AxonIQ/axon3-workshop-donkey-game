@@ -75,12 +75,7 @@ function joinMatch(request) {
         console.log("subscribe to [" + matchDestination + "]");
         stompClient.subscribe(matchDestination,
             function (joinResponse) {
-                players.push(
-                    {
-                        'playerName': JSON.parse(joinResponse.body).playerName,
-                        'donkeyLevel': ""
-                    }
-                );
+                replacePlayers(JSON.parse(joinResponse.body).players);
                 renderPlayers(players);
             });
 
@@ -101,6 +96,18 @@ function joinMatch(request) {
         joinedMatch = true;
     }
 
+}
+
+function replacePlayers(playersList) {
+    players = [];
+    $.each(playersList, function (key, playerName) {
+        players.push(
+            {
+                'playerName': playerName,
+                'donkeyLevel': ""
+            }
+        );
+    });
 }
 
 function renderPlayers(players) {

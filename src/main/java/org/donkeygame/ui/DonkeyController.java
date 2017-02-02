@@ -8,6 +8,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -23,10 +25,14 @@ public class DonkeyController {
     private final CommandGateway commandGateway;
     private final SimpMessagingTemplate messagingTemplate;
 
+    private final Set<String> players;
+
     @Autowired
     public DonkeyController(CommandGateway commandGateway, SimpMessagingTemplate messagingTemplate) {
         this.commandGateway = commandGateway;
         this.messagingTemplate = messagingTemplate;
+
+        players = new HashSet<>();
     }
 
     @MessageMapping("/create-match")
@@ -64,7 +70,8 @@ public class DonkeyController {
     public void on(GameOfDonkeyJoinedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
 
-        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(event.getPlayerName()));
+        players.add(event.getPlayerName());
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(players));
     }
 
     @EventHandler
