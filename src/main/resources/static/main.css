@@ -60,6 +60,7 @@ button#call-finish-button {
     border: none;
     background-image: url(green_button.jpg);
     background-size: cover;
+    float: right;
 }
 
 button#call-finish-button:disabled {
