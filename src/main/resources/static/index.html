@@ -25,7 +25,7 @@
 <div id="main-content" class="container">
     <h2>Donkey Time!</h2>
 
-    <div>
+    <div class="row">
         <div id="controls-explanation" class="boxed">
             <h4>Controls</h4>
             <div>
@@ -38,13 +38,13 @@
             </div>
         </div>
 
-        <div id="controls" class="row">
+        <div id="controls" >
             <form>
-                <form_control class="col-sm-6">
+                <form_control class="col-sm-12 col-md-6">
                     <label for="match-name">What match do you want to create/join?</label>
                     <input type="text" id="match-name" class="form-control" placeholder="Your match name here...">
                 </form_control>
-                <form_control class="col-sm-6">
+                <form_control class="col-sm-12 col-md-6">
                     <label for="player-name">With what name do you want to join the match?</label>
                     <input type="text" id="player-name" class="form-control" placeholder="Your name here...">
                 </form_control>
@@ -63,7 +63,7 @@
 
 <div id="match" class="container">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
+        <div class="col-sm-12 col-md-6 col-md-offset-3">
             <h4>Players</h4>
             <table id="players">
                 <tr>
@@ -75,10 +75,10 @@
 
     <div id="hand" class="row">
         <h3>Hand</h3>
-        <div class="playingCards faceImages col-sm-6">
+        <div class="playingCards faceImages col-xs-12 col-sm-6">
             <ul id="cards" class="table"></ul>
         </div>
-        <div id="button" class="col-sm-6">
+        <div id="button" class="col-xs-12 col-sm-6">
             <button id="call-finish-button" disabled="true">
                 <img class="finished-button" src="button.jpg">
             </button>
