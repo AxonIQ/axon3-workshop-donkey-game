@@ -68,7 +68,7 @@ public class DonkeyController {
     }
 
     @EventHandler
-    public void on(GameJoinedEvent event) {
+    public void on(PlayerJoinedEvent event) {
         messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
 
         Set<String> playersForMatch = playersPerMatch.computeIfAbsent(event.getMatchName(), matchName -> new HashSet<>());
@@ -87,7 +87,7 @@ public class DonkeyController {
     }
 
     @EventHandler
-    public void on(CardPlayedEvent event) {
+    public void on(CardReceivedEvent event) {
         messagingTemplate.convertAndSend(
                 buildDestination(event.getMatchName(), event.getPlayerName()), new PlayedCardResponse(event.getPlayedCard())
         );
@@ -95,7 +95,7 @@ public class DonkeyController {
 
     //TODO Replace the Object parameter for your own event
     @EventHandler
-    public void onFinishToggled(/*Object finishToggledEvent*/) {
+    public void onFinishToggled(/*Object eventIndcatingAPossibleFinish*/) {
         boolean canFinish = true; // Retrieve from event
         String destination = buildDestination("matchName", "playerName");
         messagingTemplate.convertAndSend(
@@ -105,7 +105,7 @@ public class DonkeyController {
 
     //TODO Replace the Object parameter for your own event
     @EventHandler
-    public void onOutcomeEvent(/*Object outcomeEvent*/) {
+    public void onOutcomeEvent(/*Object eventIndicatingOutcome*/) {
         Map<String, Boolean> outcomePerPlayer = new HashMap<>(); // Retrieve from event
         outcomePerPlayer.forEach((player, outcome) -> messagingTemplate.convertAndSend(
                 buildDestination("matchName", player), new OutcomeResponse(outcome)

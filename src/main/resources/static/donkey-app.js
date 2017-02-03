@@ -36,9 +36,14 @@ $(function () {
     });
     $("#cards").on('click', '#card-3', function () {
         selectCardIfPossible(3);
+    });
+
+    $("#call-finish-button").click(function () {
+        callFinish();
     })
 
 });
+
 function connect() {
     var socket = new SockJS('/donkey-websocket');
     stompClient = Stomp.over(socket);
@@ -191,6 +196,14 @@ function selectCard(cardIndex) {
         'cardIndex': cardIndex
     };
     stompClient.send("/app/select-card", {}, JSON.stringify(request));
+}
+
+function callFinish() {
+    var request = {
+        'matchName': getMatchName(),
+        'playerName': getPlayerName()
+    };
+    stompClient.send("/app/call-finished", {}, JSON.stringify(request));
 }
 
 function getMatchName() {

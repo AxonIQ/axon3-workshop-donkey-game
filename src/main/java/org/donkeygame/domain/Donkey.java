@@ -39,7 +39,7 @@ public class Donkey {
 
     @CommandHandler
     public void handle(JoinGameCommand cmd) {
-        apply(new GameJoinedEvent(cmd.getMatchName(), cmd.getPlayerName()));
+        apply(new PlayerJoinedEvent(cmd.getMatchName(), cmd.getPlayerName()));
     }
 
     @CommandHandler
@@ -93,13 +93,15 @@ public class Donkey {
         apply(new CardSelectedEvent(cmd.getMatchName(), playerName, selectedCard));
     }
 
+    // TODO: Implement the CallGameFinishedCommand handling here
+
     @EventSourcingHandler
     public void on(GameCreatedEvent event) {
         matchName = event.getMatchName();
     }
 
     @EventSourcingHandler
-    public void on(GameJoinedEvent event) {
+    public void on(PlayerJoinedEvent event) {
         players.add(event.getPlayerName());
     }
 
@@ -115,7 +117,7 @@ public class Donkey {
         updatePlayedCards(nextPlayer, event.getSelectedCard());
 
         if (allPlayersPlayedACard()) {
-            players.forEach(playerName -> apply(new CardPlayedEvent(matchName, playerName, playedCards.get(playerName))));
+            players.forEach(playerName -> apply(new CardReceivedEvent(matchName, playerName, playedCards.get(playerName))));
             playedCards.clear();
         }
     }
