@@ -95,7 +95,7 @@ public class DonkeyController {
 
     //TODO Replace the Object parameter for your own event
     @EventHandler
-    public void onFinishToggled(/*Object eventIndcatingAPossibleFinish*/) {
+    public void onFinishToggled(/*Object eventIndicatingAPossibleFinish*/) {
         boolean canFinish = true; // Retrieve from event
         String destination = buildDestination("matchName", "playerName");
         messagingTemplate.convertAndSend(
