@@ -10,10 +10,10 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
 
 @SpringBootApplication
-public class DonkeyDemoApplication {
+public class DonkeyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DonkeyDemoApplication.class, args);
+		SpringApplication.run(DonkeyApplication.class, args);
 	}
 
 	@Configuration
