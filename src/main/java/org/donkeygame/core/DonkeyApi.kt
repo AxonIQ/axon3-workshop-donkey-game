@@ -46,4 +46,4 @@ data class CallGameFinishedCommand(
         val playerName: String
 )
 
-data class FinishedCalledEvent(val matchName: String)
+data class FinishedCalledEvent(val matchName: String, val playerName: String)
