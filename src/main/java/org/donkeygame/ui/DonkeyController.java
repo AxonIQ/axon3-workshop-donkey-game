@@ -2,7 +2,16 @@ package org.donkeygame.ui;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.EventHandler;
-import org.donkeygame.core.*;
+import org.donkeygame.core.CallGameFinishedCommand;
+import org.donkeygame.core.CardReceivedEvent;
+import org.donkeygame.core.CardsDealtForPlayerEvent;
+import org.donkeygame.core.CreateGameCommand;
+import org.donkeygame.core.GameCreatedEvent;
+import org.donkeygame.core.GameStartedEvent;
+import org.donkeygame.core.JoinGameCommand;
+import org.donkeygame.core.PlayerJoinedEvent;
+import org.donkeygame.core.SelectCardCommand;
+import org.donkeygame.core.StartGameCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -64,32 +73,44 @@ public class DonkeyController {
 
     @EventHandler
     public void on(GameCreatedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Match [" + event.getMatchName() + "] has been created"));
+        messagingTemplate.convertAndSend(ALERT_PATH,
+                                         new AlertResponse(SUCCESS,
+                                                           "Match [" + event.getMatchName() + "] has been created"));
     }
 
     @EventHandler
     public void on(PlayerJoinedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "Player [" + event.getPlayerName() + "] has successfully joined the match [" + event.getMatchName() + "]"));
+        messagingTemplate.convertAndSend(ALERT_PATH,
+                                         new AlertResponse(SUCCESS,
+                                                           "Player [" + event.getPlayerName()
+                                                                   + "] has successfully joined the match [" + event
+                                                                   .getMatchName() + "]"));
 
-        Set<String> playersForMatch = playersPerMatch.computeIfAbsent(event.getMatchName(), matchName -> new HashSet<>());
+        Set<String> playersForMatch = playersPerMatch.computeIfAbsent(event.getMatchName(),
+                                                                      matchName -> new HashSet<>());
         playersForMatch.add(event.getPlayerName());
         messagingTemplate.convertAndSend(buildDestination(event.getMatchName()), new JoinedResponse(playersForMatch));
     }
 
     @EventHandler
     public void on(GameStartedEvent event) {
-        messagingTemplate.convertAndSend(ALERT_PATH, new AlertResponse(SUCCESS, "The match [" + event.getMatchName() + "] has successfully started"));
+        messagingTemplate.convertAndSend(ALERT_PATH,
+                                         new AlertResponse(SUCCESS,
+                                                           "The match [" + event.getMatchName()
+                                                                   + "] has successfully started"));
     }
 
     @EventHandler
     public void on(CardsDealtForPlayerEvent event) {
-        messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), event.getPlayerName()), new HandResponse(event.getCards()));
+        messagingTemplate.convertAndSend(buildDestination(event.getMatchName(), event.getPlayerName()),
+                                         new HandResponse(event.getCards()));
     }
 
     @EventHandler
     public void on(CardReceivedEvent event) {
         messagingTemplate.convertAndSend(
-                buildDestination(event.getMatchName(), event.getPlayerName()), new PlayedCardResponse(event.getPlayedCard())
+                buildDestination(event.getMatchName(), event.getPlayerName()),
+                new PlayedCardResponse(event.getPlayedCard())
         );
     }
 
@@ -119,5 +140,4 @@ public class DonkeyController {
     private String buildDestination(String matchName) {
         return MATCH_PATH + matchName;
     }
-
 }

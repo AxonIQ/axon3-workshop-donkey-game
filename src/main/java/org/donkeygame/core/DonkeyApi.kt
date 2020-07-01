@@ -14,6 +14,7 @@ data class PlayerJoinedEvent(
         val matchName: String,
         val playerName: String
 )
+
 data class CardsDealtForPlayerEvent(
         val matchName: String,
         val playerName: String,

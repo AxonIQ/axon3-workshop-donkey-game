@@ -11,7 +11,7 @@ enum class Suit {
 
 }
 
-@JsonFormat(shape= JsonFormat.Shape.OBJECT)
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 enum class Rank(val letter: String) {
 
     ACE("A"),
